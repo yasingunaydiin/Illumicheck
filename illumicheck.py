@@ -3,7 +3,7 @@ import re
 import tkinter as tk
 from tkinter.scrolledtext import ScrolledText
 from tkinter.filedialog import askopenfilename, asksaveasfilename
-import pymysql  
+import pymysql
 
 # Connect to MySQL database using PyMySQL
 conn = pymysql.connect(host='localhost', user='root', password='***', database='spellchecker', charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor)
@@ -42,10 +42,10 @@ def save_file(text_edit):
         f.write(content)
         text_edit.master.title(f"Save File:{filepath}")
 
-class SpellingChecker:
+class Illumicheck:
     def __init__(self):
         self.root = tk.Tk() 
-        self.root.title("Spelling Checker")
+        self.root.title("Illumicheck")
         
         # Create a menu bar
         menubar = tk.Menu(self.root)
@@ -91,4 +91,4 @@ class SpellingChecker:
                     self.text.tag_add(word, f"1.{position}", f"1.{position + len(word)}")
                     self.text.tag_config(word, foreground="red")
 
-SpellingChecker()
+Illumicheck()
