@@ -6,8 +6,11 @@ Illumicheck is your text editor not just for catching typos, but also for keepin
 
 ## Features
 
-- 
+- Check the grammar and spelling of words.
+- Text editor.
 
 ## Usage
 
 1. Run the app.
+2. Use as a text editor.
+3. The program will make wrong words red.
