@@ -1,4 +1,3 @@
-# Version 0.0.1
 import re
 import tkinter as tk
 from tkinter.scrolledtext import ScrolledText
@@ -6,14 +5,17 @@ from tkinter.filedialog import askopenfilename, asksaveasfilename
 import pymysql
 
 # Connect to MySQL database using PyMySQL
-conn = pymysql.connect(host='localhost', user='root', password='***', database='spellchecker', charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor)
+conn = pymysql.connect(host='localhost', user='root', password='root', database='spellchecker', charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor)
 
 def load_words_from_mysql():
     turkish_words = set()
+    tables = ["Wikitionary", "TDK", "TS_Corpus", "TS_TimeLine", "BounWebCorpus", "Wiki_Tagged", "trwiki"]  # Add the names of your tables here
+
     with conn.cursor() as cursor:
-        cursor.execute("SELECT turkishwords FROM TDK")
-        for row in cursor.fetchall():
-            turkish_words.add(row['turkishwords'])
+        for table in tables:
+            cursor.execute(f"SELECT {table}.turkishwords FROM {table}")
+            for row in cursor.fetchall():
+                turkish_words.add(row['turkishwords'])
     return turkish_words
 
 # Load Turkish words from the MySQL database
@@ -91,4 +93,5 @@ class Illumicheck:
                     self.text.tag_add(word, f"1.{position}", f"1.{position + len(word)}")
                     self.text.tag_config(word, foreground="red")
 
-Illumicheck()
+if __name__ == "__main__":
+    Illumicheck()
