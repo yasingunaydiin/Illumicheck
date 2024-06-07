@@ -7,17 +7,18 @@ from tkinter.filedialog import askopenfilename, asksaveasfilename  # Import file
 import pymysql  # Import pymysql module for MySQL database interaction
 import json  # Import json module for reading and writing JSON files
 import os  # Import os module for interacting with the operating system
+import creds
 
 # Cache file path
 CACHE_FILE = 'word_cache.json'
 
 # Establish a connection to the MySQL database
 conn = pymysql.connect(
-    host='localhost',
-    user='root',
-    password='root',
-    database='spellchecker',
-    charset='utf8mb4',
+    host=creds.host,
+    user=creds.user,
+    password=creds.password,
+    database=creds.database,
+    charset=creds.charset,
     cursorclass=pymysql.cursors.DictCursor
 )
 
@@ -46,9 +47,9 @@ def load_words_from_mysql(progress_var, existing_words):
                 words.add(row['WordText'])  # Add each word to the set
 
             offset += BATCH_SIZE
-            progress = (offset / total_rows) * 100 # Progress bar code
+            progress = (offset / total_rows) * 100  # Progress bar code
             progress_var.set(progress)  # Update the progress bar
-            print(f"Loaded {len(rows)} words from MySQL (Batch). Progress: {progress:.2f}%") #len is used to determine the number of rows fetched from the database.
+            print(f"Loaded {len(rows)} words from MySQL (Batch). Progress: {progress:.2f}%")  # len is used to determine the number of rows fetched from the database.
 
     print(f"Loaded a total of {len(words)} words from MySQL.")
     save_words_to_cache(words)  # Save the words to the cache file
@@ -77,7 +78,7 @@ def save_words_to_cache(words):
 def load_words(progress_var):
     # Load words from cache and MySQL
     words = load_words_from_cache()  # Load words from cache
-    words = load_words_from_mysql(progress_var, words)  # Load words from MySQL
+    threading.Thread(target=load_words_from_mysql, args=(progress_var, words)).start()  # Load words from MySQL in a separate thread
     return words
 
 # Set of words loaded from cache and MySQL
@@ -155,8 +156,8 @@ class Illumicheck:
     def load_words_in_background(self):
         # Load words in a background thread
         global words
-        words = load_words(self.progress_var)  # Load words from cache and MySQL
-        words_loaded_event.set()  # Signal that words have been loaded
+        words = load_words(self.progress_var)  # Load words from cache and start loading MySQL words
+        words_loaded_event.set()  # Signal that initial words (from cache) have been loaded
 
     def check_word(self, event):
         # Check for incorrect words in the text editor
@@ -187,4 +188,4 @@ class Illumicheck:
                 start_idx = content.find(word, end_idx)
 
 if __name__ == "__main__":
-    Illumicheck()
+    Illumicheck()  # Start the Illumicheck application
