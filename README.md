@@ -19,7 +19,8 @@ Illumicheck is your text editor not just for catching typos, but also for keepin
 - Wikitionary, 366,747
 - TDK, 763,872
 - TS_Corpus, 3,280,261
-(soon to be added)
+
+- (soon to be added)
 - Wiki_Tagged, 45,333,762
 - trwiki, 61,275,077
 - TS_TimeLine, 110,460,871
